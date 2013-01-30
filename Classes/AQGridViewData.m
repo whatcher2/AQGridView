@@ -218,6 +218,15 @@
 			i += (numPerRow - 1);
 			continue;
 		}
+        
+        // When cell heights are not exact factors of the avaiable visible height
+        // we can get an error. For example: we have rect height = 416,
+        // and cell heights are 138, making 3 rows fit, but leaves 2px left over.
+        // The intersection test then says the next row is visible but its not.
+        // If we use a slightly smaller cell rect for the test we can get the cells
+        // the user truely sees. Fixes fb 37842
+        cellRect.origin.y += 5;
+        cellRect.size.height -= 10;
 		
 		if ( CGRectIntersectsRect(cellRect, aRect) )
 		{
